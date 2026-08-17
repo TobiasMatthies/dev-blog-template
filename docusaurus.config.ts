@@ -1,12 +1,12 @@
-import {themes as prismThemes} from 'prism-react-renderer';
-import type {Config} from '@docusaurus/types';
 import type * as Preset from '@docusaurus/preset-classic';
-import {config as dotenvconfig}  from "dotenv";
+import type { Config } from '@docusaurus/types';
+import { config as dotenvconfig } from 'dotenv';
+import { themes as prismThemes } from 'prism-react-renderer';
 
 dotenvconfig();
 
 /* TODO: change to read configuration from environment */
-const blogEnabled = Boolean(process.env.BLOG_ENABLED === 'true')
+const blogEnabled = Boolean(process.env.BLOG_ENABLED === 'true');
 
 const config: Config = {
   title: 'DSO Live Demo Docs',
@@ -14,10 +14,10 @@ const config: Config = {
   favicon: 'img/favicon.ico',
 
   // Set the production url of your site here
-  url: process.env.DEPLOYMENT_URL ?? "https://spmse.github.io",
+  url: process.env.DEPLOYMENT_URL ?? 'https://spmse.github.io',
   // Set the /<baseUrl>/ pathname under which your site is served
   // For GitHub pages deployment, it is often '/<projectName>/'
-  baseUrl: process.env.BASE_URL ?? "/",
+  baseUrl: process.env.BASE_URL ?? '/',
 
   // GitHub pages deployment config.
   // If you aren't using GitHub pages, you don't need these.
@@ -45,25 +45,23 @@ const config: Config = {
           sidebarPath: './sidebars.ts',
           // Please change this to your repo.
           // Remove this to remove the "edit this page" links.
-          editUrl:
-            'https://github.com/spmse/dev-blog-template',
+          editUrl: 'https://github.com/spmse/dev-blog-template',
         },
-        blog: blogEnabled ? 
-          {
-            showReadingTime: true,
-            feedOptions: {
-              type: ['rss', 'atom'],
-              xslt: true,
-            },
-            // Please change this to your repo.
-            // Remove this to remove the "edit this page" links.
-            editUrl:
-              'https://github.com/spmse/dev-blog-template',
-            // Useful options to enforce blogging best practices
-            onInlineTags: 'warn',
-            onInlineAuthors: 'warn',
-            onUntruncatedBlogPosts: 'warn',
-          }
+        blog: blogEnabled
+          ? {
+              showReadingTime: true,
+              feedOptions: {
+                type: ['rss', 'atom'],
+                xslt: true,
+              },
+              // Please change this to your repo.
+              // Remove this to remove the "edit this page" links.
+              editUrl: 'https://github.com/spmse/dev-blog-template',
+              // Useful options to enforce blogging best practices
+              onInlineTags: 'warn',
+              onInlineAuthors: 'warn',
+              onUntruncatedBlogPosts: 'warn',
+            }
           : false,
         theme: {
           customCss: './src/css/custom.css',
@@ -130,7 +128,7 @@ const config: Config = {
             {
               label: 'GitHub',
               href: 'https://github.com/facebook/docusaurus',
-            }
+            },
           ],
         },
       ],
@@ -145,7 +143,7 @@ const config: Config = {
         {
           className: 'theme-code-block-highlighted-line',
           line: 'highlight-next-line',
-          block: {start: 'highlight-start', end: 'highlight-end'},
+          block: { start: 'highlight-start', end: 'highlight-end' },
         },
         {
           className: 'code-block-error-line',
@@ -156,12 +154,11 @@ const config: Config = {
   } satisfies Preset.ThemeConfig,
 };
 
+console.log(blogEnabled);
 
 if (blogEnabled) {
-  (config.themeConfig.navbar as any).items.push({to: '/blog', label: 'Blog', position: 'left'});
-  (
-    config.themeConfig.footer as any
-  ).links[2].items.push({
+  (config.themeConfig?.navbar as any).items.push({ to: '/blog', label: 'Blog', position: 'left' });
+  (config.themeConfig?.footer as any).links[2].items.push({
     to: '/blog',
     label: 'Blog',
   });

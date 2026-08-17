@@ -17,3 +17,18 @@ hola:
   label: Hola
   permalink: /hola
   description: Hola tag description
+
+hacking:
+  label: Hacking
+  permalink: /hacking
+  description: Ethical hacking, penetration testing, and security research
+
+ctf:
+  label: CTF
+  permalink: /ctf
+  description: Capture The Flag challenge writeups
+
+owasp-juice-shop:
+  label: OWASP Juice Shop
+  permalink: /owasp-juice-shop
+  description: Writeups and solutions for OWASP Juice Shop challenges
