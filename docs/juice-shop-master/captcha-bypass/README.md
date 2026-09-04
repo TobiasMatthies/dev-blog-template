@@ -1,13 +1,18 @@
 ---
-slug: owasp-captcha-bypass
-title: 'OWASP Juice Shop – CAPTCHA Bypass Challenge'
-authors: [tobias]
-tags: [hacking, ctf, owasp-juice-shop]
+id: juice-shop-master/captcha-bypass
+slug: /juice-shop-master/captcha-bypass
+title: CAPTCHA Bypass Challenge
 ---
+
+# CAPTCHA Bypass Challenge
+
+**Category:** Improper Input Validation (OWASP Top 10: A04:2021 – Insecure Design)
 
 A walkthrough of the **CAPTCHA Bypass** challenge in [OWASP Juice Shop](https://owasp.org/www-project-juice-shop/) — automating customer feedback submissions by exploiting a CAPTCHA endpoint that hands you the answer for free.
 
-<!-- truncate -->
+## Video Walkthrough (german)
+
+https://www.loom.com/share/73e5edfe311d4fe7aee8f19259330a61
 
 ## Goal
 
@@ -131,3 +136,7 @@ Running the script fires off 10 feedback submissions in quick succession, each w
 - A CAPTCHA is only as strong as its answer-handling: if the solution is ever exposed to the client (even for a "human-solvable" math CAPTCHA), it can trivially be automated away.
 - Intercepting proxies like Burp Suite make it easy to spot when an endpoint is leaking more than it should.
 - Automated challenge/response flows should be validated purely server-side, with the answer never traveling to the client in the challenge response.
+
+## Security Risk & Impact
+
+A CAPTCHA is meant to prove a request comes from a human, stopping bots from mass-creating accounts, spamming forms, or brute-forcing logins. When the "proof" is trivially recoverable — as here, where the answer is shipped in the challenge response itself — the control provides no real protection at all. In a production system this can enable large-scale automated abuse: spam campaigns, fake review/feedback flooding, credential-stuffing at scale, or resource-exhaustion attacks, all while the system believes it is only talking to verified humans. The broader lesson is that any anti-automation or anti-abuse control must be validated entirely server-side, with no part of the "secret" ever exposed to the client.
