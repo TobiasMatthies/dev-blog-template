@@ -37,19 +37,6 @@ const config: Config = {
     locales: ['en'],
   },
 
-  plugins: [
-    [
-      '@docusaurus/plugin-content-docs',
-      {
-        id: 'juiceShopMaster',
-        path: 'juice-shop-master',
-        routeBasePath: 'juice-shop-master',
-        sidebarPath: './sidebarsJuiceShopMaster.ts',
-        editUrl: 'https://github.com/spmse/dev-blog-template',
-      },
-    ],
-  ],
-
   presets: [
     [
       'classic',

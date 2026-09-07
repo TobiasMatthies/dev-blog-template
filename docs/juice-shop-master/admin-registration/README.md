@@ -1,5 +1,5 @@
 ---
-id: juice-shop-master/admin-registration
+id: admin-registration
 slug: /juice-shop-master/admin-registration
 title: Admin Registration Challenge
 ---

@@ -1,5 +1,5 @@
 ---
-id: juice-shop-master/captcha-bypass
+id: captcha-bypass
 slug: /juice-shop-master/captcha-bypass
 title: CAPTCHA Bypass Challenge
 ---

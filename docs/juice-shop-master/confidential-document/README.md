@@ -1,5 +1,5 @@
 ---
-id: juice-shop-master/confidential-document
+id: confidential-document
 slug: /juice-shop-master/confidential-document
 title: Confidential Document Challenge
 ---

@@ -1,5 +1,5 @@
 ---
-id: juice-shop-master/overview
+id: overview
 slug: /juice-shop-master
 title: Juice Shop Master
 ---

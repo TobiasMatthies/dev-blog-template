@@ -1,5 +1,5 @@
 ---
-id: juice-shop-master/api-only-xss
+id: api-only-xss
 slug: /juice-shop-master/api-only-xss
 title: API-Only XSS Challenge
 ---
