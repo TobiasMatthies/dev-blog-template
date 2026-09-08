@@ -1,13 +1,18 @@
 ---
-slug: owasp-confidential-document
-title: "OWASP Juice Shop – Confidential Document Challenge"
-authors: [tobias]
-tags: [hacking, ctf, owasp-juice-shop]
+id: confidential-document
+slug: /juice-shop-master/confidential-document
+title: Confidential Document Challenge
 ---
+
+# Confidential Document Challenge
+
+**Category:** Security Misconfiguration (OWASP Top 10: A05:2021 – Security Misconfiguration)
 
 A walkthrough of the **Confidential Document** challenge in [OWASP Juice Shop](https://owasp.org/www-project-juice-shop/) — finding a sensitive file hidden in an exposed FTP directory using directory enumeration.
 
-<!-- truncate -->
+## Video Walkthrough
+
+<!-- TODO: add link to the video walkthrough (max. 5 min) -->
 
 ## Goal
 
@@ -78,3 +83,7 @@ Browsing to `http://127.0.0.1:3000/ftp/quarantine` revealed the quarantine folde
 - Exposed FTP directories without authentication are a common misconfiguration.
 - Directory enumeration with a focused wordlist and response-size filtering keeps results clean and actionable.
 - Always check parent directories after discovering a subdirectory — the target may not be in the deepest path.
+
+## Security Risk & Impact
+
+Serving a directory of files without authentication or an index/allow-list relies entirely on "security through obscurity" — the assumption that nobody will guess or enumerate the path. As shown here, that assumption breaks down against basic tooling like Gobuster in minutes. In a real environment this class of misconfiguration can expose confidential business documents, credentials, backup files, or source code to anyone who finds (or brute-forces) the URL, with no audit trail and no access control to stop it. The broader consequence is data exposure that can lead to further compromise (leaked secrets enabling account takeover, business intelligence leaking to competitors, etc.). The fix is always to enforce authentication/authorization at the storage layer itself, not to rely on a path being "hard to guess".
