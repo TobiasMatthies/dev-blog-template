@@ -32,3 +32,13 @@ owasp-juice-shop:
   label: OWASP Juice Shop
   permalink: /owasp-juice-shop
   description: Writeups and solutions for OWASP Juice Shop challenges
+
+google-xss-game:
+  label: Google XSS Game
+  permalink: /google-xss-game
+  description: Writeups and solutions for Google's XSS Game challenges
+
+xss:
+  label: XSS
+  permalink: /xss
+  description: Cross-Site Scripting vulnerabilities and exploitation techniques
