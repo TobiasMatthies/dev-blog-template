@@ -19,17 +19,29 @@ Get `alert()` to fire on the page, using a URL that only differs in its query pa
 
 I started by looking at the page as a black box: what user-controllable input does it consume? The page shows a countdown timer, and the value that seeds it comes straight from the URL — a query parameter that sets how many seconds the timer counts down. That parameter is the **source**.
 
-## Step 2: Find the Sink
+## Step 2: Investigate `startTimer()`
 
-Next, I checked how that source value is actually used once it reaches the page. Instead of being assigned safely (e.g. via a property or `textContent`), it's dropped straight into the markup that starts the timer, ending up inline inside an `onload` handler roughly like this:
+Since that parameter feeds straight into the countdown, I first went looking for a fitting sink inside the `startTimer()` function itself — i.e. whether the vulnerability lived in the function's own logic. Looking at its implementation, the first line is:
+
+```js
+seconds = parseInt(seconds) || 3;
+```
+
+## Step 3: Rule Out `startTimer()` Itself as the Sink
+
+This line kills the theory that the function itself is the sink: whatever string gets passed in is forced through `parseInt()`, and anything that doesn't parse to a number falls back to `3`. No matter what I pass as the argument, by the time it's used *inside* the function it has already been coerced into a harmless number. So the function body can't be the sink — any payload would just get parsed away, and validating/coercing input inside a downstream function like this is useless if the vulnerability actually sits somewhere else entirely.
+
+## Step 4: Realize the `onload` Attribute Could Be the Sink
+
+That sent me looking further upstream: not at how `startTimer()` processes its input, but at how the page builds the call to it in the first place. Instead of being assigned safely (e.g. via a property or `textContent`), the raw parameter is dropped straight into the markup that starts the timer, ending up inline inside an `onload` handler roughly like this:
 
 ```html
 <img src="/static/loading.gif" onload="startTimer('<user input>')">
 ```
 
-The parameter value is spliced directly between the quotes of the `startTimer('...')` call, with no escaping. Since it lands inside a JavaScript context (an inline event handler), and that context is built by naive string concatenation, this is a classic injection point: anything that closes the surrounding quote and call is executed as real JavaScript.
+The parameter value is spliced directly between the quotes of the `startTimer('...')` call, with no escaping — and, critically, *before* `parseInt()` ever gets a chance to run. Since it lands inside a JavaScript context (an inline event handler), and that context is built by naive string concatenation, this is a classic injection point: anything that closes the surrounding quote and call is executed as real JavaScript. This is the actual sink.
 
-## Step 3: Break Out of the String
+## Step 5: Break Out of the String
 
 With the sink identified, the exercise became: craft a value that closes `startTimer('` cleanly and then runs my own code. A few of the payloads I tried first:
 
@@ -40,7 +52,7 @@ With the sink identified, the exercise became: craft a value that closes `startT
 
 Neither worked. The problem is the template still appends its own closing `')` *after* whatever I inject — so whatever I write has to leave the tail end of the attribute (`')`) as syntactically valid JavaScript, not stray characters that break parsing. My payloads either left the original string unclosed (so my code was just interpreted as harmless data) or left a dangling quote/parenthesis at the end that produced a syntax error and killed the whole handler before `alert()` could run.
 
-## Step 4: The Working Payload
+## Step 6: The Working Payload
 
 The payload that finally worked:
 
@@ -63,6 +75,7 @@ The result is perfectly valid JavaScript — `startTimer('');alert('hack')` — 
 
 ## Key Takeaways
 
+- Validation or coercion (like `parseInt(seconds) || 3`) inside a *downstream* function doesn't protect against injection that happens *upstream*, at the point where the raw input is embedded into markup. Always trace the input to where it's first written into HTML/JS, not just to where it's ultimately consumed.
 - Concatenating user input directly into an inline event handler (`onload="...('<input>')"`) is just as dangerous as concatenating it into a `<script>` block — it's still a JavaScript context.
 - An injection payload doesn't have to be self-contained. If the sink appends a fixed suffix after your input, you can deliberately leave a string or call unterminated and let that suffix close it for you.
 - When a naive payload fails, check whether it left the surrounding code in a syntactically broken state (killing the whole handler) versus simply being swallowed as inert data — the fix is usually to balance quotes/parens with what the template appends, not to add more punctuation.
